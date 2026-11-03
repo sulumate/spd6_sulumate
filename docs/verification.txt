@@ -1,0 +1,44 @@
+LOCAL VERIFICATION
+Maven 3.9.9, Oracle JDK 25.0.1, compiler release 17
+Command: mvn test
+[INFO] Running kz.aitu.filesystem.TreeIntegrityTest
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.056 s -- in kz.aitu.filesystem.TreeIntegrityTest
+[INFO] Running kz.aitu.filesystem.VisitorOperationsTest
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.035 s -- in kz.aitu.filesystem.VisitorOperationsTest
+[INFO] Running kz.aitu.filesystem.ApplicationTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in kz.aitu.filesystem.ApplicationTest
+[INFO] Running kz.aitu.filesystem.DispatchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in kz.aitu.filesystem.DispatchTest
+[INFO] Tests run: 41, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+
+ACTUAL JAVA 17 CI
+Temurin 17, mvn --batch-mode --no-transfer-progress verify
+https://github.com/sulumate/spd6_sulumate/actions/runs/41649032740
+Commit: 25f01389a4eaa0a3141965a03eb127b83ed8460d
+Tests run: 41, Failures: 0, Errors: 0, Skipped: 0
+Build and both demo steps: SUCCESS
+
+DEFAULT APPLICATION
+java -jar target/visitor-filesystem-1.0.0.jar
+Root: workspace
+Total size: 12160 bytes
+Search: suffix=.txt, minimum=256 bytes
+  docs/drafts/notes.txt
+  docs/guide.txt
+Files: 7
+Directories: 5
+Maximum depth: 3
+Repeated search unchanged: true
+
+CHANGED SEARCH CONFIGURATION
+java -jar target/visitor-filesystem-1.0.0.jar .md 128
+Root: workspace
+Total size: 12160 bytes
+Search: suffix=.md, minimum=128 bytes
+  README.md
+  docs/drafts/todo.md
+Files: 7
+Directories: 5
+Maximum depth: 3
+Repeated search unchanged: true

@@ -1,0 +1,76 @@
+@startuml
+top to bottom direction
+skinparam classAttributeIconSize 0
+interface Element {
+  +name(): String
+  +children(): List<? extends Element>
+  +accept(visitor: Visitor<?>): void
+}
+abstract class Node {
+  -name: String
+  -parent: DirectoryNode
+  +name(): String
+  +children(): List<? extends Element>
+}
+class FileNode {
+  -sizeBytes: long
+  +sizeBytes(): long
+  +accept(visitor: Visitor<?>): void
+}
+class DirectoryNode {
+  -children: Map<String, Node>
+  +add(child: Node): void
+  +remove(name: String): Node
+  +children(): List<Node>
+  +accept(visitor: Visitor<?>): void
+}
+interface "Visitor<R>" as Visitor {
+  +reset(): void
+  +at(relativePath: String, depth: int): void
+  +visit(file: FileNode): void
+  +visit(directory: DirectoryNode): void
+  +result(): R
+}
+abstract class "AbstractVisitor<R>" as AbstractVisitor {
+  -relativePath: String
+  -depth: int
+  +reset(): void
+  +at(relativePath: String, depth: int): void
+  {abstract} #resetResult(): void
+}
+class TotalSizeVisitor {
+  -totalBytes: long
+  +visit(file: FileNode): void
+  +visit(directory: DirectoryNode): void
+  +result(): Long
+}
+class SearchVisitor {
+  -filenameCriterion: Predicate<String>
+  -minimumSizeBytes: long
+  +visit(file: FileNode): void
+  +visit(directory: DirectoryNode): void
+  +result(): List<String>
+}
+class StatisticsVisitor {
+  -fileCount: long
+  -directoryCount: long
+  -maximumDepth: int
+  +visit(file: FileNode): void
+  +visit(directory: DirectoryNode): void
+  +result(): Statistics
+}
+class TreeWalker {
+  +walk(root: Element, visitor: Visitor<R>): R
+}
+Node ..|> Element
+FileNode --|> Node
+DirectoryNode --|> Node
+DirectoryNode "0..1 parent" *-- "0..* children" Node
+AbstractVisitor ..|> Visitor
+TotalSizeVisitor --|> AbstractVisitor
+SearchVisitor --|> AbstractVisitor
+StatisticsVisitor --|> AbstractVisitor
+Element ..> Visitor : accepts
+TreeWalker ..> Element : walks
+TreeWalker ..> Visitor : resets / locates / invokes
+@enduml
